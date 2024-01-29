@@ -3,6 +3,7 @@
 class cCubePC;
 class cCamera;
 class cGrid;
+class cCubeMan;
 
 class cMainGame
 {
@@ -17,6 +18,7 @@ private:
 	cCubePC*	m_pCubePC;
 	cCamera*	m_pCamera;
 	cGrid*		m_pGrid;
+	cCubeMan*	m_pCubeMan;
 
 public:
 	void Setup();
@@ -31,5 +33,7 @@ public:
 	void Draw_Triangle();
 
 	void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+	void Setup_Light();
 };
 
