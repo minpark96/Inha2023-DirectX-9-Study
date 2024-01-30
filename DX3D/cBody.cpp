@@ -21,4 +21,5 @@ void cBody::Setup()
 	{
 		D3DXVec3TransformCoord(&m_vecVertex[i].p, &m_vecVertex[i].p, &mat);
 	}
+	m_vLocalPos.y = 0.9f;
 }

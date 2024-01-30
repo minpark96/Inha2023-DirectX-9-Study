@@ -21,6 +21,8 @@ cMainGame::~cMainGame()
 	Safe_Delete(m_pCamera);
 	Safe_Delete(m_pGrid);
 	Safe_Delete(m_pCubeMan);
+
+	Safe_Release(m_pTexture);
 	g_pDeviceManager->Destroy();
 }
 
@@ -42,6 +44,8 @@ void cMainGame::Setup()
 	m_pGrid->Setup();
 
 	Setup_Light();
+
+	Setup_Texture();
 
 	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, false);
 }
@@ -82,6 +86,8 @@ void cMainGame::Render()
 
 	//Draw_Line();
 	//Draw_Triangle();
+
+	Draw_Texture();
 
 	if (m_pGrid)
 		m_pGrid->Render();
@@ -159,4 +165,50 @@ void cMainGame::Setup_Light()
 	g_pD3DDevice->SetLight(0, &stLight);
 	g_pD3DDevice->LightEnable(0, true); 
 
+}
+
+void cMainGame::Setup_Texture()
+{
+	D3DXCreateTextureFromFile(g_pD3DDevice, L"../image/¾ÈÀ¯Áø.png", &m_pTexture);
+	ST_PT_VERTEX v;
+	v.p = D3DXVECTOR3(0, 0, 0);
+	v.t = D3DXVECTOR2(0, 1);
+	m_vecVertex.push_back(v);
+
+	v.p = D3DXVECTOR3(0, 2, 0);
+	v.t = D3DXVECTOR2(0, 0);
+	m_vecVertex.push_back(v);
+
+	v.p = D3DXVECTOR3(2, 2, 0);
+	v.t = D3DXVECTOR2(1, 0);
+	m_vecVertex.push_back(v);
+
+	v.p = D3DXVECTOR3(0, 0, 0);
+	v.t = D3DXVECTOR2(0, 1);
+	m_vecVertex.push_back(v);
+
+	v.p = D3DXVECTOR3(-2, 2, 0);
+	v.t = D3DXVECTOR2(0, 0);
+	m_vecVertex.push_back(v);
+
+	v.p = D3DXVECTOR3(2, 2, 0);
+	v.t = D3DXVECTOR2(1, 0);
+	m_vecVertex.push_back(v);
+}
+
+void cMainGame::Draw_Texture()
+{
+	g_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, false);
+
+	D3DXMATRIXA16 matWorld;
+	D3DXMatrixIdentity(&matWorld);
+	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
+	g_pD3DDevice->SetTexture(0, m_pTexture);
+	g_pD3DDevice->SetFVF(ST_PT_VERTEX::FVF);
+	g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, m_vecVertex.size() / 3,
+		&m_vecVertex[0], sizeof(ST_PT_VERTEX));
+
+	g_pD3DDevice->SetTexture(0, NULL);
 }
